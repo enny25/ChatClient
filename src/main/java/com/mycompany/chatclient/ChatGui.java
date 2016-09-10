@@ -5,17 +5,37 @@
  */
 package com.mycompany.chatclient;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import protocol.ProtocolString;
+
 /**
  *
  * @author Lenovo
  */
-public class ChatGui extends javax.swing.JPanel {
+public class ChatGui extends javax.swing.JPanel implements java.util.Observer {
 
     /**
      * Creates new form ChatGui
      */
+    DefaultListModel model = new DefaultListModel();
+    ClientForm clientFormObject;
     public ChatGui() {
         initComponents();
+     clientFormObject = new ClientForm();
+     userName.setEditable(true);
+     IP.setEditable(true);
+     Port.setEditable(true);
+     chatBox.setEditable(false);
+     msgBox.setEditable(false);
+     Disconnect.setEnabled(false);
+     Connect.setEnabled(true);
+     sendButton.setEnabled(false);
+     Users.setModel(model);
     }
 
     /**
@@ -27,19 +47,182 @@ public class ChatGui extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        chatBox = new javax.swing.JTextArea();
+        msgBox = new javax.swing.JTextField();
+        sendButton = new javax.swing.JButton();
+        IP = new javax.swing.JTextField();
+        Connect = new javax.swing.JButton();
+        Disconnect = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        Users = new javax.swing.JList<>();
+        jLabel1 = new javax.swing.JLabel();
+        userName = new javax.swing.JTextField();
+        Port = new javax.swing.JTextField();
+
+        chatBox.setColumns(20);
+        chatBox.setRows(5);
+        jScrollPane1.setViewportView(chatBox);
+
+        msgBox.setText("Enter Text:");
+
+        sendButton.setText("Send");
+        sendButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendButtonActionPerformed(evt);
+            }
+        });
+
+        IP.setText("IP");
+
+        Connect.setText("Connect");
+        Connect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ConnectActionPerformed(evt);
+            }
+        });
+
+        Disconnect.setText("Disconnect");
+        Disconnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DisconnectActionPerformed(evt);
+            }
+        });
+
+        Users.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(Users);
+
+        jLabel1.setText("Users:");
+
+        userName.setText("Daniel");
+
+        Port.setText("Port");
+        Port.setName("Port"); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(IP)
+                            .addComponent(Port, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Connect, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Disconnect)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(msgBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(sendButton))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(userName, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(IP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Connect)
+                            .addComponent(userName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(5, 5, 5)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Disconnect)
+                            .addComponent(jLabel1)
+                            .addComponent(Port, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(msgBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sendButton))))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void DisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DisconnectActionPerformed
+        try {
+            // TODO add your handling code here:
+            clientFormObject.Disconnect();
+        } catch (IOException ex) {
+            Logger.getLogger(ChatGui.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Connect.setEnabled(true);
+        userName.setEditable(true);
+        sendButton.setEnabled(false);
+        Disconnect.setEnabled(false);
+        chatBox.setText(null);
+        chatBox.setText("Disconnected");
+    }//GEN-LAST:event_DisconnectActionPerformed
+
+    private void ConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnectActionPerformed
+        // TODO add your handling code here:
+        String ip = IP.getText();
+        int port = Integer.parseInt(Port.getText());
+        String username = userName.getText();
+        clientFormObject.Connect(ip,port,username);
+        Connect.setEnabled(false);
+        userName.setEditable(false);
+        sendButton.setEnabled(true);
+        Disconnect.setEnabled(true);
+        chatBox.setText("Connected");
+        clientFormObject.startIncThread(this);
+    }//GEN-LAST:event_ConnectActionPerformed
+
+    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
+        // TODO add your handling code here:
+        String msg = msgBox.getText();
+        String[] onlineUsers = (String[])model.toArray();
+        clientFormObject.sendMsg(onlineUsers,msg);
+    }//GEN-LAST:event_sendButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Connect;
+    private javax.swing.JButton Disconnect;
+    private javax.swing.JTextField IP;
+    private javax.swing.JTextField Port;
+    private javax.swing.JList<String> Users;
+    private javax.swing.JTextArea chatBox;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField msgBox;
+    private javax.swing.JButton sendButton;
+    private javax.swing.JTextField userName;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update(Observable o, Object arg) {
+        String incoming = (String)arg;
+        if(incoming.startsWith(ProtocolString.CLIENTLIST)){
+            model.removeAllElements();
+            String[] incNoProtocol = incoming.split("#");
+            String[] onlineUsers = incNoProtocol[2].split(",");
+            for (String onlineUser : onlineUsers) {
+              model.addElement(onlineUser);
+                
+            }
+            
+            
+            
+        }
+        chatBox.append(incoming);
+    }
 }
