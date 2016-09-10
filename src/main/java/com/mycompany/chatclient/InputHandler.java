@@ -41,15 +41,18 @@ public class InputHandler implements Runnable{
 
     @Override
     public void run() {
-        output.println(ProtocolString.LOGIN +user);
+        Login(user);
        try{
            while (( inc = input.readLine()) != null){
+               System.out.println(inc);
                if(inc.startsWith(ProtocolString.CLIENTLIST)){
                    ClientList(inc);
                }
                if(inc.startsWith(ProtocolString.MSGRES)){
                    MsgRes(inc);
                }
+               
+               
                
                
                
@@ -64,17 +67,29 @@ public class InputHandler implements Runnable{
        
     }
 
-    private void ClientList(String inc) {
+    public void ClientList(String inc) {
         String[] clientSplit = inc.split(":");
-        String clients = clientSplit[1];
+        String clients = clientSplit[1].toString();
         System.out.println(clients);
+        
+        System.out.println("from clientlist method");
     }
 
-    private void MsgRes(String inc) {
+    public void MsgRes(String inc) {
         String[] msgResSplit = inc.split(":");
         String sender = msgResSplit[1];
         String msg = msgResSplit[2];
         System.out.println("Sender "+ sender+" msg " + msg);
+        System.out.println("from msgres method");
+    }
+    public void Msg (String receivers, String msg){
+        output.println(ProtocolString.MSG+receivers+":"+msg);
+    }
+    public void Login(String user){
+        output.println(ProtocolString.LOGIN+user);
+    }
+    public void Logout(){
+        output.println(ProtocolString.LOGOUT);
     }
     
 }
